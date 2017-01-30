@@ -35,6 +35,22 @@ func (t *TagSet) Swap(i, j int) {
 	t.Filters[i], t.Filters[j] = t.Filters[j], t.Filters[i]
 }
 
+func (t *TagSet) Reverse() *TagSet {
+	other := &TagSet{
+		Tags:       t.Tags,
+		Filters:    make([]Expr, len(t.Filters)),
+		SeriesKeys: make([]string, len(t.SeriesKeys)),
+		Key:        t.Key,
+	}
+
+	total := len(t.SeriesKeys)
+	for i := 0; i < total; i++ {
+		other.Filters[i] = t.Filters[total-i-1]
+		other.SeriesKeys[i] = t.SeriesKeys[total-i-1]
+	}
+	return other
+}
+
 // Message represents a user-facing message to be included with the result.
 type Message struct {
 	Level string `json:"level"`
